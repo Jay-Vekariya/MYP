@@ -17,14 +17,21 @@ const loginController = async (req, res) => {
       password
     );
 
-    res.status(200).json({
-      statusCode: 200,
-      success: true,
-      message: "Login successful",
-      errorType: "loginSuccess",
-      accessToken,
-      user: patientData,
-    });
+    res
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "development",
+        sameSite: "Strict",
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+      })
+      .status(200)
+      .json({
+        statusCode: 200,
+        success: true,
+        message: "Login successful",
+        errorType: "loginSuccess",
+        user: patientData,
+      });
   } catch (error) {
     console.error("Login error:", error);
     res.status(error.statusCode || 500).json({

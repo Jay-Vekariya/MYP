@@ -11,30 +11,30 @@ Follow these steps to set up and run the project:
     ```
 
 2. **Install Dependencies**  
-    Make sure you have [Node.js](https://nodejs.org/) installed, then run:  
+    Ensure you have [Node.js](https://nodejs.org/) installed, then execute:  
     ```bash
     npm install
     ```
 
 3. **Start the Development Server**  
-    Start the Vite development server with:  
+    Launch the Vite development server using:  
     ```bash
     npm run dev
     ```
 
 4. **Open in Browser**  
-    Open your browser and navigate to the URL provided in the terminal (usually `http://localhost:5173`).
+    Navigate to the URL displayed in the terminal (commonly `http://localhost:5173`) using your browser.
 
 5. **Build for Production**  
-    To create a production build, run:  
+    Generate a production-ready build by running:  
     ```bash
     npm run build
     ```
 
 6. **Preview the Production Build**  
-    To preview the production build locally, run:  
+    To locally preview the production build, execute:  
     ```bash
     npm run preview
     ```
 
-Make sure to check the `package.json` file for additional scripts and configurations.
+Refer to the `package.json` file for additional scripts and configurations.

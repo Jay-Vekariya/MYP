@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/signup.model.js"; // Adjust path if needed
+import User from "../models/signup.model.js "; // Adjust path if needed
 
 export const userLoginService = async (email, password) => {
   const user = await User.findOne({ email });
