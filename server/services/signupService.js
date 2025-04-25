@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt';
-import User from '../models/signup.model.js';
+import bcrypt from "bcrypt";
+import User from "../models/signup.model.js";
 
 const userSignupService = async (userSignupData) => {
   try {
@@ -43,7 +43,6 @@ const userSignupService = async (userSignupData) => {
       message: "User registered successfully.",
       errorType: "registerSuccess",
     };
-
   } catch (error) {
     console.error(`Error: ${error.message}`);
     throw new Error(`Error in userSignupService: ${error.message}`);

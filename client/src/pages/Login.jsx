@@ -1,12 +1,33 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate('/dashboard');
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/login/", {
+        email,
+        password,
+      });
+
+      const data = response.data;
+
+      if (data.success) {
+        localStorage.setItem("accessToken", data.accessToken);
+        navigate("/");
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
 
   return (
@@ -23,10 +44,13 @@ const Login = () => {
           <h1 className="text-2xl font-semibold">MYP</h1>
         </div>
         <h2 className="text-center text-xl font-semibold mb-2">Welcome to</h2>
-        <h3 className="text-center text-2xl font-bold mb-4">Manage Your Property</h3>
-        <p className="text-center text-gray-600 mb-6">Please login your account.</p>
+        <h3 className="text-center text-2xl font-bold mb-4">
+          Manage Your Property
+        </h3>
+        <p className="text-center text-gray-600 mb-6">
+          Please login your account.
+        </p>
         <form onSubmit={handleSubmit}>
-
           <div className="mb-4">
             <label className="block text-gray-700" htmlFor="email">
               Email
@@ -34,6 +58,8 @@ const Login = () => {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="rahul@gmail.com"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -45,6 +71,8 @@ const Login = () => {
             <input
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="********"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -89,14 +117,13 @@ const Login = () => {
           </button>
         </div>
         <div className="text-center text-gray-600">
-          New member here?{' '}
-          <button 
-            onClick={() => navigate('/signup')}
+          New member here?{" "}
+          <button
+            onClick={() => navigate("/signup")}
             className="text-blue-500 hover:underline"
           >
             Register Now
           </button>
-
         </div>
       </div>
     </div>

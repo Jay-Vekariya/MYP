@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js"; // Import the database connection function
+import connectDB from "./config/db.js";
 import signupController from "./controllers/signupController.js";
-import loginController from "./controllers/loginController.js"; // Import the login controller
-// import verifyToken from "./middlewares/verifyToken.middleware.js";
+import loginController from "./controllers/loginController.js";
+import verifyToken from "./middlewares/verifyToken.middleware.js";
 
 import {
   createContact,
@@ -11,7 +11,7 @@ import {
   getContactById,
   updateContact,
   deleteContact,
-} from "./controllers/contactsCotroller.js"; // Import the contact controller
+} from "./controllers/contactsCotroller.js";
 
 import {
   createExpense,
@@ -19,7 +19,7 @@ import {
   getExpenseById,
   updateExpense,
   deleteExpense,
-} from "./controllers/expenseController.js"; // Import the expense controller
+} from "./controllers/expenseController.js";
 
 import {
   createProperty,
@@ -27,40 +27,50 @@ import {
   getPropertyById,
   updateProperty,
   deleteProperty,
-} from "./controllers/propertyController.js"; // Import the property controller
+} from "./controllers/propertyController.js";
+
+import cookieParser from "cookie-parser";
 
 dotenv.config();
-connectDB(); // Connect to MongoDB
 
 const app = express();
+
+// ✅ Move this before any middleware that parses body
+connectDB(app);
+
+// ✅ Place parsers and cookie handler after CORS but before routes
+app.use(express.json());
+app.use(cookieParser());
+
 const PORT = process.env.PORT || 3000;
 
 const router = express.Router();
-router.post("/api/signup/", signupController); // Define the signup route
-router.post("/api/login/", loginController); // Define the login route
 
-// Define the contact routes
-router.post("/api/contacts/", createContact); // Define the create contact route
-router.get("/api/contacts/", getAllContacts); // Define the get all contacts route
-router.get("/api/contacts/:id", getContactById); // Definethe get contact by ID route
-router.put("/api/contacts/:id", updateContact); // Define the update contact route
-router.delete("/api/contacts/:id", deleteContact); // Define the delete contact route
+router.post("/api/signup/", signupController);
+router.post("/api/login/", loginController);
 
-//expense routes
-router.post("/api/expense/", createExpense); // Define the create expense route
-router.get("/api/expense/", getExpenses); // Define the get all expenses route
-router.get("/api/expense/:id", getExpenseById); // Define the get expense by ID route
-router.put("/api/expense/:id", updateExpense); // Define the update expense route
-router.delete("/api/expense/:id", deleteExpense); // Define the delete expense route
+// Contact routes
+router.post("/api/contacts/", verifyToken, createContact);
+router.get("/api/contacts/", verifyToken, getAllContacts);
+router.get("/api/contacts/:id", verifyToken, getContactById);
+router.put("/api/contacts/:id", verifyToken, updateContact);
+router.delete("/api/contacts/:id", verifyToken, deleteContact);
 
-//property routes
-router.post("/api/property/", createProperty); // Define the create property route
-router.get("/api/property/", getProperties); // Define the get all properties route
-router.get("/api/property/:id", getPropertyById); // Define the get property by ID route
-router.put("/api/property/:id", updateProperty); // Define the update property route
-router.delete("/api/property/:id", deleteProperty); // Define the delete property route
+// Expense routes
+router.post("/api/expense/", verifyToken, createExpense);
+router.get("/api/expense/", verifyToken, getExpenses);
+router.get("/api/expense/:id", verifyToken, getExpenseById);
+router.put("/api/expense/:id", verifyToken, updateExpense);
+router.delete("/api/expense/:id", verifyToken, deleteExpense);
 
-app.use(express.json()); // Middleware to parse JSON requests
-app.use("/", router); // Use the router
+// Property routes
+router.post("/api/property/", verifyToken, createProperty);
+router.get("/api/property/", verifyToken, getProperties);
+router.get("/api/property/:id", verifyToken, getPropertyById);
+router.put("/api/property/:id", verifyToken, updateProperty);
+router.delete("/api/property/:id", verifyToken, deleteProperty);
+
+// ✅ Attach the router at the end
+app.use("/", router);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

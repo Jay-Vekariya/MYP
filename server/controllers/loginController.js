@@ -31,6 +31,7 @@ const loginController = async (req, res) => {
         message: "Login successful",
         errorType: "loginSuccess",
         user: patientData,
+        accessToken,
       });
   } catch (error) {
     console.error("Login error:", error);
